@@ -9,12 +9,20 @@ use Statistics\Dto\StatisticsTo;
 
 class NoopCalculator extends AbstractCalculator
 {
+    protected const UNITS = 'posts';
+    /**
+     * @var array
+     */
+    private $postsPerUser = [];
+
     /**
      * @inheritDoc
      */
     protected function doAccumulate(SocialPostTo $postTo): void
     {
-        // Noops!
+        $authorId = $postTo->getAuthorId();
+
+        $this->postsPerUser[$authorId] = ($this->postsPerUser[$authorId] ?? 0) + 1;
     }
 
     /**
@@ -22,6 +30,8 @@ class NoopCalculator extends AbstractCalculator
      */
     protected function doCalculate(): StatisticsTo
     {
-        return new StatisticsTo();
+        $value =  empty($this->postsPerUser) ? 0 : array_sum($this->postsPerUser) / count($this->postsPerUser);
+
+        return (new StatisticsTo())->setValue(round($value,2));
     }
 }
