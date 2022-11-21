@@ -39,5 +39,7 @@ FROM base as local
 ENV PHP_IDE_CONFIG="serverName=sm_assignment"
 ENV APP_ENV="local"
 
-#RUN pecl install -f xdebug \
-#    && docker-php-ext-enable xdebug
+RUN pecl install -f xdebug \
+    && docker-php-ext-enable xdebug
+
+EXPOSE 9090
